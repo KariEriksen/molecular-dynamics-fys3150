@@ -26,3 +26,6 @@ HEADERS += \
     statisticssampler.h \
     unitconverter.h
 
+
+QMAKE_CXXFLAGS_RELEASE += -O3
+QMAKE_CXXFLAGS_RELEASE -= -O2

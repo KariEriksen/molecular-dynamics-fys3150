@@ -4,8 +4,8 @@
 class LennardJones
 {
 private:
-    double m_sigma = 1.0;
-    double m_epsilon = 1.0;
+    double m_sigma = 1.0;//3.405;
+    double m_epsilon = 1.0;//1.644e-19;//119.8;
     double m_potentialEnergy = 0;
 
 public:

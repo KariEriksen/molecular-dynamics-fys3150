@@ -14,7 +14,9 @@ using namespace std;
 int main(int numberOfArguments, char **argumentList)
 {
     int numberOfUnitCells = 5;
-    double initialTemperature = UnitConverter::temperatureFromSI(300.0); // measured in Kelvin
+
+    double initialTemperature = UnitConverter::temperatureFromSI(615.0); // measured in Kelvin 800
+    //double finalTemperature = UnitConverter::temperatureFromSI(800);
     double latticeConstant = UnitConverter::lengthFromAngstroms(5.26); // measured in angstroms
 
     // If a first argument is provided, it is the number of unit cells
@@ -26,44 +28,52 @@ int main(int numberOfArguments, char **argumentList)
 
     double dt = UnitConverter::timeFromSI(1e-15); // Measured in seconds.
 
-    cout << "One unit of length is " << UnitConverter::lengthToSI(1.0) << " meters" << endl;
-    cout << "One unit of velocity is " << UnitConverter::velocityToSI(1.0) << " meters/second" << endl;
-    cout << "One unit of time is " << UnitConverter::timeToSI(1.0) << " seconds" << endl;
-    cout << "One unit of mass is " << UnitConverter::massToSI(1.0) << " kg" << endl;
-    cout << "One unit of temperature is " << UnitConverter::temperatureToSI(1.0) << " K" << endl;
+        cout << "One unit of length is " << UnitConverter::lengthToSI(1.0) << " meters" << endl;
+        cout << "One unit of velocity is " << UnitConverter::velocityToSI(1.0) << " meters/second" << endl;
+        cout << "One unit of time is " << UnitConverter::timeToSI(1.0) << " seconds" << endl;
+        cout << "One unit of mass is " << UnitConverter::massToSI(1.0) << " kg" << endl;
+        cout << "One unit of temperature is " << UnitConverter::temperatureToSI(1.0) << " K" << endl;
 
     System system;
     system.createFCCLattice(numberOfUnitCells, latticeConstant, initialTemperature);
     system.potential().setEpsilon(1.0);
-    system.potential().setSigma(1.0);
+    system.potential().setSigma(3.405);
 
+    //system.atoms().at(0)->velocity.set(100,100,100);
     system.removeTotalMomentum();
 
     StatisticsSampler statisticsSampler;
-    IO movie("movie.xyz"); // To write the state to file
+    //IO movie("movie.xyz"); // To write the state to file
 
     cout << setw(20) << "Timestep" <<
-            setw(20) << "Time" <<
-            setw(20) << "Temperature" <<
-            setw(20) << "KineticEnergy" <<
-            setw(20) << "PotentialEnergy" <<
-            setw(20) << "TotalEnergy" << endl;
-    for(int timestep=0; timestep<1000; timestep++) {
+                setw(20) << "Time" <<
+                setw(20) << "Temperature" <<
+                setw(20) << "KineticEnergy" <<
+                setw(20) << "PotentialEnergy" <<
+                setw(20) << "TotalEnergy" << endl;
+
+
+    for(int timestep=0; timestep<100000; timestep++) {
         system.step(dt);
         statisticsSampler.sample(system);
-        if( timestep % 100 == 0 ) {
+        //statisticsSampler.saveToFile(system);
+        if( timestep % 1000 == 0 ) {
             // Print the timestep every 100 timesteps
+
             cout << setw(20) << system.steps() <<
                     setw(20) << system.time() <<
                     setw(20) << statisticsSampler.temperature() <<
                     setw(20) << statisticsSampler.kineticEnergy() <<
                     setw(20) << statisticsSampler.potentialEnergy() <<
                     setw(20) << statisticsSampler.totalEnergy() << endl;
+
         }
-        movie.saveState(system);
+        //movie.saveState(system);
     }
 
-    movie.close();
+    //movie.close();
 
     return 0;
+
 }
+
